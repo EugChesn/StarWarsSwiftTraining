@@ -21,7 +21,7 @@
 		3E6BA6AC23F2B9F40012E93B /* DataView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6BA6AB23F2B9F40012E93B /* DataView.xib */; };
 		3E6BA6AE23F2BAF20012E93B /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6BA6AD23F2BAF20012E93B /* DataView.swift */; };
 		3E983F8223F2EEF30077E162 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8123F2EEF30077E162 /* TableViewController.swift */; };
-		3E983F8523F305780077E162 /* RequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8423F305780077E162 /* RequestController.swift */; };
+		3E983F8523F305780077E162 /* DetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8423F305780077E162 /* DetailsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +41,7 @@
 		3E6BA6AB23F2B9F40012E93B /* DataView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataView.xib; sourceTree = "<group>"; };
 		3E6BA6AD23F2BAF20012E93B /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		3E983F8123F2EEF30077E162 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
-		3E983F8423F305780077E162 /* RequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestController.swift; sourceTree = "<group>"; };
+		3E983F8423F305780077E162 /* DetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,18 +68,11 @@
 		3E12210223F81674006CCB53 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3E983F8423F305780077E162 /* RequestController.swift */,
+				3E983F8423F305780077E162 /* DetailsController.swift */,
 				3E983F8123F2EEF30077E162 /* TableViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		3E12210523F81984006CCB53 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
 				3E12210323F8192F006CCB53 /* ExtensionsTable.swift */,
 			);
-			path = Extensions;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		3E244B1123F6FF000059F72D /* Model */ = {
@@ -139,7 +132,6 @@
 				3E244B1123F6FF000059F72D /* Model */,
 				3E12210223F81674006CCB53 /* Controllers */,
 				3E12210123F8162F006CCB53 /* UI */,
-				3E12210523F81984006CCB53 /* Extensions */,
 				3E244B1323F71F6A0059F72D /* Protocols */,
 				3E244B1223F6FF0E0059F72D /* Network */,
 				3E6BA6A023F2B95B0012E93B /* Assets.xcassets */,
@@ -235,7 +227,7 @@
 				3E6BA69823F2B95A0012E93B /* AppDelegate.swift in Sources */,
 				3E5DC80623F4883500F7214E /* CustomTableViewCell.swift in Sources */,
 				3E244B1523F71F830059F72D /* ProtocolsMain.swift in Sources */,
-				3E983F8523F305780077E162 /* RequestController.swift in Sources */,
+				3E983F8523F305780077E162 /* DetailsController.swift in Sources */,
 				3E12210423F8192F006CCB53 /* ExtensionsTable.swift in Sources */,
 				3E5A83B123F6CD5D00B8044E /* ModelJson.swift in Sources */,
 				3E983F8223F2EEF30077E162 /* TableViewController.swift in Sources */,

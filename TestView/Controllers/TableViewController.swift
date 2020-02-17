@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableViewController : UIViewController, UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate{
+class TableViewController : UIViewController{
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -99,44 +99,11 @@ class TableViewController : UIViewController, UITableViewDataSource,UITableViewD
             return false
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredData.count
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Stars Wars"
-    }
-    
-    //Выставление настроек отображения заголовка таблицы
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let header: UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
-        header.textLabel?.textAlignment = NSTextAlignment.center
-        header.textLabel?.font = UIFont(name: "", size: 20)
-        header.textLabel?.textColor = UIColor.systemBlue
-    }
-    
-    //Создание кастомной ячейки таблицы
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as? CustomTableViewCell {
-            cell.textLabelPerson.text = filteredData[indexPath.row]
-            return cell
-        }
-        return UITableViewCell()
-    }
-    
+
     //Нажатие на ячейку таблицы переход к экрану детайльной информации
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let StatViewController = storyboard.instantiateViewController(withIdentifier: "Stat") as? RequestController else {return}
+        guard let StatViewController = storyboard.instantiateViewController(withIdentifier: "Stat") as? DetailsController else {return}
         
         self.tableView.cellForRow(at: indexPath)?.isSelected = false
     

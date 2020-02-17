@@ -9,7 +9,7 @@
 import UIKit
 
 
-class RequestController : UIViewController{
+class DetailsController : UIViewController{
     var statPerson : [ResultsStat]?
     
     @IBOutlet weak var namePerson: DataView!
