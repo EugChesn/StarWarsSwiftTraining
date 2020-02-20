@@ -43,7 +43,7 @@ extension TableViewController : UITableViewDataSource, UITableViewDelegate{
     }
 }
 
-extension TableViewController : sendDataRequest{
+extension TableViewController : DataRequestDelegate{
     func sendDataRequest(data: SearchJson) {
         self.dataRequest = data
     }

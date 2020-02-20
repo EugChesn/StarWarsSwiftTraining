@@ -11,13 +11,4 @@ import UIKit
 class CustomTableViewCell: UITableViewCell {
     
     @IBOutlet weak var textLabelPerson: UILabel!
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String!) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
 }

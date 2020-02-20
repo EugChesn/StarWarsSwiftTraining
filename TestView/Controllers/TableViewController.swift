@@ -14,14 +14,14 @@ class TableViewController : UIViewController{
     @IBOutlet weak var searchBar: UISearchBar!
     
     let network = NetworkApi()
-    var delegateNetwork : Network?
+    var delegateNetwork: NetworkDelegate?
     
-    var data : [String] = [] // исходные данные таблицы
+    var data: [String] = [] // исходные данные таблицы
     var filteredData: [String] = [] // данные по которым выполняется фильтр отображения
     
     var timerSearchDelay: Timer? //таймер задержки определяющий окончания ввода пользователя
     
-    var dataRequest : SearchJson? // данные полученные от api на основе введенного текста в поиск
+    var dataRequest: SearchJson? // данные полученные от api на основе введенного текста в поиск
     {
         didSet{
             print("dataRequest update")

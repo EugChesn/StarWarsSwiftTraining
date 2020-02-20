@@ -8,13 +8,13 @@
 
 import Foundation
 
-class NetworkApi : Network{
+class NetworkApi : NetworkDelegate{
     
     let searchNameApi = "https://swapi.co/api/people/?search="
     let testApi = "https://swapi.co/api/people/1"
     
-    private var dataRequest : SearchJson?
-    var delegateSendData: sendDataRequest?
+    private var dataRequest: SearchJson?
+    var delegateSendData: DataRequestDelegate?
     
     func makeRequest(name:String) {
          getApi(namePeople: name)

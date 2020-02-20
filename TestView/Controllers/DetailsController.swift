@@ -10,7 +10,7 @@ import UIKit
 
 
 class DetailsController : UIViewController{
-    var statPerson : [ResultsStat]?
+    var statPerson: [ResultsStat]?
     
     @IBOutlet weak var namePerson: DataView!
     @IBOutlet weak var heightPerson: DataView!
@@ -42,10 +42,10 @@ class DetailsController : UIViewController{
             namePerson.textFieldVar.text = stat[0].name
             heightPerson.textFieldVar.text = stat[0].height
             massPerson.textFieldVar.text = stat[0].mass
-            hairColorPerson.textFieldVar.text = stat[0].hair_color
-            skinColorPerson.textFieldVar.text = stat[0].skin_color
-            eyeColorPerson.textFieldVar.text = stat[0].eye_color
-            birthYearPerson.textFieldVar.text = stat[0].birth_year
+            hairColorPerson.textFieldVar.text = stat[0].hairColor
+            skinColorPerson.textFieldVar.text = stat[0].skinColor
+            eyeColorPerson.textFieldVar.text = stat[0].eyeColor
+            birthYearPerson.textFieldVar.text = stat[0].birthYear
             genderPerson.textFieldVar.text = stat[0].gender
         }
     }

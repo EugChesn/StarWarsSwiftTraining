@@ -6,10 +6,10 @@
 //  Copyright © 2020 Евгений. All rights reserved.
 //
 
-protocol Network{
+protocol NetworkDelegate{
     func makeRequest(name: String)
 }
 
-protocol sendDataRequest{
+protocol DataRequestDelegate{
     func sendDataRequest(data: SearchJson)
 }
