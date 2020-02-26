@@ -8,9 +8,8 @@
 
 import UIKit
 
-
 class DetailsController : UIViewController{
-    var statPerson: [ResultsStat]?
+    var statPerson: ResultsStat?
     
     @IBOutlet weak var namePerson: DataView!
     @IBOutlet weak var heightPerson: DataView!
@@ -37,21 +36,22 @@ class DetailsController : UIViewController{
         birthYearPerson.labelContent.text = "Year birth"
         genderPerson.labelContent.text = "Gender"
     }
+    
     private func setDataTextLabelLoad(){
         if let stat = statPerson{
-            namePerson.textFieldVar.text = stat[0].name
-            heightPerson.textFieldVar.text = stat[0].height
-            massPerson.textFieldVar.text = stat[0].mass
-            hairColorPerson.textFieldVar.text = stat[0].hairColor
-            skinColorPerson.textFieldVar.text = stat[0].skinColor
-            eyeColorPerson.textFieldVar.text = stat[0].eyeColor
-            birthYearPerson.textFieldVar.text = stat[0].birthYear
-            genderPerson.textFieldVar.text = stat[0].gender
+            namePerson.textFieldVar.text = stat.name
+            heightPerson.textFieldVar.text = stat.height
+            massPerson.textFieldVar.text = stat.mass
+            hairColorPerson.textFieldVar.text = stat.hairColor
+            skinColorPerson.textFieldVar.text = stat.skinColor
+            eyeColorPerson.textFieldVar.text = stat.eyeColor
+            birthYearPerson.textFieldVar.text = stat.birthYear
+            genderPerson.textFieldVar.text = stat.gender
         }
     }
     
     func sendData(_ anyData: Any?) {
-        if let detailStruct = anyData as? [ResultsStat] {
+        if let detailStruct = anyData as? ResultsStat {
             statPerson = detailStruct
         }
     }

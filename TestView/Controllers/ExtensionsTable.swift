@@ -22,7 +22,7 @@ extension TableViewController : UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Stars Wars"
+        return headerTable
     }
     
     //Выставление настроек отображения заголовка таблицы
@@ -44,33 +44,44 @@ extension TableViewController : UITableViewDataSource, UITableViewDelegate{
 }
 
 extension TableViewController : DataRequestDelegate{
-    func sendDataRequest(data: SearchJson) {
-        self.dataRequest = data
+    func sendDataRequest(data: Dictionary<String, ResultsStat>?) {
+        if let dataExitst = data{
+            self.dataRequestPersons = dataExitst
+        }
+    }
+    
+    func sendErrorRequest(error: String) {
+        DispatchQueue.main.async{
+            let alert = UIAlertController(title: nil, message: error, preferredStyle: .alert)
+            alert.view.alpha = 6
+            alert.view.layer.cornerRadius = 15
+            self.present(alert, animated: true)
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+                alert.dismiss(animated: true)
+            }
+        }
     }
 }
 
 extension TableViewController: UISearchBarDelegate{
     // This method updates filteredData based on the text in the Search Box
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        filteredData = []
+    
         timerSearchDelay?.invalidate()
         timerSearchDelay = nil
         timerSearchDelay = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.doDelayedSearch), userInfo: searchText, repeats: false)
-        
-        /*filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
-            // If dataItem matches the searchText, return true to include it
-            return dataString.range(of: searchText, options: .caseInsensitive) != nil
-        })*/
-        
     }
     
     @objc func doDelayedSearch(_: Timer) {
         guard let info = timerSearchDelay?.userInfo as? String else { return }
-        if info != "" {
+        if !info.isEmpty {
+            headerTable = "Star Wars"
             delegateNetwork?.makeRequest(name: info)
-        }
-        else{
-            filteredData = data
+        } else {
+            delegateNetwork?.getRecentPerson(recent: recentViewPerson)
+            headerTable = "Recent persons"
             tableView.reloadData()
         }
         timerSearchDelay = nil

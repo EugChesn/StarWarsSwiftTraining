@@ -13,7 +13,7 @@ struct SearchJson: Codable {
     var results: [ResultsStat]?
 }
 
-struct ResultsStat: Codable {
+struct ResultsStat: Codable, Equatable {
     var name: String
     var height: String
     var mass: String
@@ -33,4 +33,14 @@ struct ResultsStat: Codable {
         case birthYear = "birth_year"
         case gender = "gender"
     }
+    
+    static func == (left: ResultsStat, right: ResultsStat) -> Bool{
+        return left.name == right.name
+    }
 }
+
+
+/*class ModelDataPersons{
+    var filteredDataTable: [ResultsStat]?
+    var requestData: [SearchJson]?
+}*/

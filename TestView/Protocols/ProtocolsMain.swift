@@ -7,9 +7,11 @@
 //
 
 protocol NetworkDelegate{
-    func makeRequest(name: String)
+    func makeRequest(name: String) // сигнал к запросу к апи по переданной поисковой строке
+    func getRecentPerson(recent: Set<String>) // запрос на получение данных недавно просмотренных персонажей
 }
 
 protocol DataRequestDelegate{
-    func sendDataRequest(data: SearchJson)
+    func sendDataRequest(data: Dictionary<String, ResultsStat>?)
+    func sendErrorRequest(error: String)
 }
