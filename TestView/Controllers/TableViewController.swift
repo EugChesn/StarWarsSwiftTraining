@@ -18,6 +18,7 @@ class TableViewController : UIViewController{
     let network = NetworkApi.instance
     var delegateNetwork: NetworkDelegate?
     
+    //данные пришедщие от апи по последнему запросу
     var dataRequestPersons: Dictionary<String, ResultsStat>? {
         didSet{
             print("dataRequest update")
@@ -25,29 +26,37 @@ class TableViewController : UIViewController{
         }
     }
     
-    var recentViewPerson: Set<String> = [] // недавно просмотренные персонажи на экране детальной информации
-    var filteredData: [String] = [] // данные по которым выполняется отображение поиска
+    // недавно просмотренные персонажи на экране детальной информации
+    var viewPersonsDataCore: Set<String> = []
     
-    var timerSearchDelay: Timer? //таймер задержки определяющий окончания ввода пользователя
+    // данные по которым выполняется отображение поиска
+    var filteredData: [String] = []
+    
+    //таймер задержки определяющий окончания ввода пользователя
+    var timerSearchDelay: Timer?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         registerTableViewCells()
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
         
-        
         delegateNetwork = network
         network.delegateSendData = self
         
+        // Загрузка данных из БД для первоначального отображения
+        delegateNetwork?.getRecentPersonDataBase()
+        filteredData = Array<String>(viewPersonsDataCore)
         
         //Для выключения клавиатуры
         let tapScreen = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapScreen.cancelsTouchesInView = false
         view.addGestureRecognizer(tapScreen)
     }
+    
     
     @objc func dismissKeyboard(sender: UITapGestureRecognizer){
         view.endEditing(true)
@@ -87,20 +96,33 @@ class TableViewController : UIViewController{
         guard let StatViewController = storyboard.instantiateViewController(withIdentifier: "Stat") as? DetailsController else {return}
         
         tableView.deselectRow(at: indexPath, animated: false)
+        
     
         if let cell = self.tableView.cellForRow(at: indexPath) as? CustomTableViewCell{
             guard let textName = cell.textLabelPerson.text else { return }
-            recentViewPerson.insert(textName)
+            
+            viewPersonsDataCore.insert(textName)
+            delegateNetwork?.setRecentPersonDataBase(recent: textName)
+            
             StatViewController.sendData(searchPerson(namePerson: textName))
         }
         navigationController?.pushViewController(StatViewController, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        
+    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            if let cell = self.tableView.cellForRow(at: indexPath) as? CustomTableViewCell{
+                guard let textName = cell.textLabelPerson.text else { return }
+                CoreDataManager.shared.deleteObject(entityName: "Person", filterKey: textName)
+            }
             
             // remove the item from the data model
-            recentViewPerson.remove(filteredData[indexPath.row])
+            viewPersonsDataCore.remove(filteredData[indexPath.row])
+            CoreDataManager.shared.deleteObject(entityName: "Person", filterKey:filteredData[indexPath.row])
             filteredData.remove(at: indexPath.row)
             
             // delete the table view row

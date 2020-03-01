@@ -21,7 +21,18 @@ struct ResultsStat: Codable, Equatable {
     var skinColor: String
     var eyeColor: String
     var birthYear: String
-    var gender: String 
+    var gender: String
+    
+    init(person: Person) {
+        name = person.name ?? ""
+        height = String(person.height)
+        mass = String(person.mass)
+        hairColor = person.color_hair ?? ""
+        skinColor = person.color_skin ?? ""
+        eyeColor = person.color_eyes ?? ""
+        birthYear = person.year_birth ?? ""
+        gender = person.gender ?? ""
+    }
     
     enum CodingKeys: String, CodingKey {
         case name = "name"

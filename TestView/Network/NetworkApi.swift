@@ -6,6 +6,7 @@
 //  Copyright © 2020 Евгений. All rights reserved.
 //
 
+import CoreData
 import UIKit
 
 fileprivate enum StateRequest{
@@ -14,63 +15,35 @@ fileprivate enum StateRequest{
 }
 
 class NetworkApi{
-    
+
     final let searchNameApi = "https://swapi.co/api/people/?search="
-    let testApi = "https://swapi.co/api/people/1"
     
-    private var dataRequest: Dictionary<String, ResultsStat> = [:] //  cash
+    // Общее хранилище(ключ имя персонажа);
+    // Сюда сгружаются данные из БД и кешируется сетевые запросы
+    private var dataRequest: Dictionary<String, ResultsStat> = [:]
+    
+    // данные за одну сессию(в случае с множеством запросов к api с переходом по next)
     private var sessionData: [SearchJson] = []
     
     var delegateSendData: DataRequestDelegate?
 
     static let instance: NetworkApi = NetworkApi()
-    private init(){}
-    
-    /*func getDifferentSearch() -> [String]? {
-        let index = recentSearchText.count - 1
-        if index > 0{
-            guard let lastResult = dataRequest[recentSearchText[index]]?.results else {  return nil }
-            guard let predResult = dataRequest[recentSearchText[index - 1]]?.results else {  return nil }
-            
-            var result: [String]?
-            for item in lastResult{
-                if predResult.contains(item){
-                    result?.append(item.name)
-                }
-            }
-            
-            return result
-            
-        } else {
-            return nil
-        }
-    }
-    
-    func differentCountResultOfLastRequest() -> Int{
-        let index = recentSearchText.count - 1
-        if index > 0{
-            let result = (dataRequest[recentSearchText[index]]?.results?.count ?? 0) -           (dataRequest[recentSearchText[index - 1]]?.results?.count ?? 0)
-            return result
-        }
-        else {
-            return 0
-        }
-    }*/
+    private var checkConnection: Bool = true
     
     private func addRequestIntoDictionary(request: SearchJson) {
         if let result = request.results{
             for person in result{
-                dataRequest.updateValue(person, forKey: person.name.lowercased())
+                dataRequest.updateValue(person, forKey: person.name)
             }
         }
     }
-    
+
     private func getDictionaryForView(dataRequest: [SearchJson]) -> Dictionary<String, ResultsStat>? {
         var resDict: Dictionary<String, ResultsStat> = [:]
         for request in dataRequest{
             if let result = request.results{
                 for person in result{
-                    resDict.updateValue(person, forKey: person.name.lowercased())
+                    resDict.updateValue(person, forKey: person.name)
                 }
             }
         }
@@ -80,7 +53,7 @@ class NetworkApi{
     private func checkCashe(searchText: String) -> Dictionary<String, ResultsStat> {
         var resultPersons: Dictionary<String, ResultsStat>  = [:]
         for key in dataRequest.keys{
-            if key.contains(searchText.lowercased()) {
+            if key.contains(searchText) {
                 resultPersons[key] = dataRequest[key]
             }
         }
@@ -141,6 +114,7 @@ class NetworkApi{
         func handlerError(state: StateRequest){
             switch state {
             case .Error(let msg):
+                self.checkConnection = false
                 delegateSendData?.sendErrorRequest(error: msg)
                 break
             case .Success:
@@ -149,6 +123,7 @@ class NetworkApi{
         }
         
         func handler(jsonInput: Any){
+            self.checkConnection = true
             guard let json = jsonInput as? SearchJson else { return }
             guard let urlStr = json.next else {
                 self.delegateSendData?.sendDataRequest(data: getDictionaryForView(dataRequest: sessionData))
@@ -163,18 +138,55 @@ class NetworkApi{
     }
     
     private func getApi(namePeople: String){
-        let cashePerson = checkCashe(searchText: namePeople)
-        
-        if true{ //if cashePerson.isEmpty{
+        if checkConnection{
             createSession(namePeople: namePeople)
         } else {
+            let cashePerson = checkCashe(searchText: namePeople)
             self.delegateSendData?.sendDataRequest(data: cashePerson)
         }
+    }
+    
+    private func saveCoreData(recent: String){
+        func statToPerson(stat: ResultsStat) -> Person{
+            let person = Person()
+            person.name = stat.name
+            person.height = Int32(stat.height) ?? 0
+            person.mass = Int32(stat.mass) ?? 0
+            person.gender = stat.gender
+            person.color_eyes = stat.eyeColor
+            person.color_hair = stat.hairColor
+            person.color_skin = stat.skinColor
+            person.year_birth = stat.birthYear
+            return person
+        }
         
+        let countRecent = CoreDataManager.shared.countObjectRequest(entityName: "Person", filterKey: recent)
+        
+        if let count = countRecent{
+            if count < 1 {
+                if let dataReq = dataRequest[recent]{
+                    var person = statToPerson(stat: dataReq)
+                    CoreDataManager.shared.saveContext()
+                }
+            }
+        }
+    }
+    
+    private func loadCoreData(){
+        let obj = CoreDataManager.shared.getFetchAllPerson(entityName: String(describing: Person.self)) as? [Person]
+        if let persons = obj{
+            for item in persons{
+                let stat = ResultsStat(person: item)
+                dataRequest.updateValue(stat, forKey: stat.name)
+            }
+            delegateSendData?.sendDataBase(data: dataRequest)
+        }
     }
 }
 
+
 extension NetworkApi: NetworkDelegate{
+    
     func makeRequest(name: String){
         getApi(namePeople: name)
     }
@@ -189,4 +201,13 @@ extension NetworkApi: NetworkDelegate{
         }
         delegateSendData?.sendDataRequest(data: result)
     }
+    
+    func getRecentPersonDataBase(){
+        loadCoreData()
+    }
+    
+    func setRecentPersonDataBase(recent: String){
+        saveCoreData(recent: recent)
+    }
 }
+

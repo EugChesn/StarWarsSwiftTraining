@@ -46,7 +46,7 @@ extension TableViewController : UITableViewDataSource, UITableViewDelegate{
 extension TableViewController : DataRequestDelegate{
     func sendDataRequest(data: Dictionary<String, ResultsStat>?) {
         if let dataExitst = data{
-            self.dataRequestPersons = dataExitst
+            dataRequestPersons = dataExitst
         }
     }
     
@@ -59,6 +59,15 @@ extension TableViewController : DataRequestDelegate{
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
                 alert.dismiss(animated: true)
+            }
+        }
+    }
+    
+    func sendDataBase(data: Dictionary<String, ResultsStat>?){
+        if let dataExitst = data{
+            dataRequestPersons = data
+            for item in dataExitst{
+                viewPersonsDataCore.insert(item.key)
             }
         }
     }
@@ -80,7 +89,7 @@ extension TableViewController: UISearchBarDelegate{
             headerTable = "Star Wars"
             delegateNetwork?.makeRequest(name: info)
         } else {
-            delegateNetwork?.getRecentPerson(recent: recentViewPerson)
+            delegateNetwork?.getRecentPerson(recent: viewPersonsDataCore)
             headerTable = "Recent persons"
             tableView.reloadData()
         }
