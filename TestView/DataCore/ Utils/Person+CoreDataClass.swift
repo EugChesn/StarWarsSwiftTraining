@@ -13,7 +13,7 @@ import CoreData
 @objc(Person)
 public class Person: NSManagedObject {
     convenience init() {
-        self.init(entity: CoreDataManager.shared.getEntityForName("Person"), insertInto: CoreDataManager.shared.persistentContainer.viewContext)
+        self.init(entity: CoreDataManager.shared.getEntityForName("Person"),
+                  insertInto: CoreDataManager.shared.persistentContainer.viewContext)
     }
-    
 }

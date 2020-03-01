@@ -6,6 +6,8 @@
 //  Copyright © 2020 Евгений. All rights reserved.
 //
 
+// swiftlint:disable all
+
 import UIKit
 
 @UIApplicationMain

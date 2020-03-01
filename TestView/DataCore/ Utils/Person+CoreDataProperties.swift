@@ -9,7 +9,7 @@
 
 import Foundation
 import CoreData
-
+// swiftlint:disable all
 
 extension Person {
 

@@ -6,27 +6,22 @@
 //  Copyright © 2020 Евгений. All rights reserved.
 //
 
-protocol NetworkDelegate{
+protocol NetworkDelegate: class {
     // сигнал к запросу к апи по переданной поисковой строке
     func makeRequest(name: String)
-    
     // запрос на получение данных недавно просмотренных персонажей
     func getRecentPerson(recent: Set<String>)
-    
     // запрос на получении данных недавно просмотренных персонажей из базы
     func getRecentPersonDataBase()
-    
     // сигнал добавить персонажа в базу
     func setRecentPersonDataBase(recent: String)
 }
 
-protocol DataRequestDelegate{
+protocol DataRequestDelegate: class {
     // полученне данных сетевого запроса
-    func sendDataRequest(data: Dictionary<String, ResultsStat>?)
-    
+    func sendDataRequest(data: [String: ResultsStat]?)
     // получение данных ошибки запроса
     func sendErrorRequest(error: String)
-    
     // сигнал к отправке данных недавно просмотренного персонажа в базу данных
-    func sendDataBase(data: Dictionary<String, ResultsStat>?)
+    func sendDataBase(data: [String: ResultsStat]?)
 }

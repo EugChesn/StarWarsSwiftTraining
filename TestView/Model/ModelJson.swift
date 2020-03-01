@@ -22,7 +22,6 @@ struct ResultsStat: Codable, Equatable {
     var eyeColor: String
     var birthYear: String
     var gender: String
-    
     init(person: Person) {
         name = person.name ?? ""
         height = String(person.height)
@@ -33,7 +32,6 @@ struct ResultsStat: Codable, Equatable {
         birthYear = person.year_birth ?? ""
         gender = person.gender ?? ""
     }
-    
     enum CodingKeys: String, CodingKey {
         case name = "name"
         case height = "height"
@@ -44,14 +42,7 @@ struct ResultsStat: Codable, Equatable {
         case birthYear = "birth_year"
         case gender = "gender"
     }
-    
-    static func == (left: ResultsStat, right: ResultsStat) -> Bool{
+    static func == (left: ResultsStat, right: ResultsStat) -> Bool {
         return left.name == right.name
     }
 }
-
-
-/*class ModelDataPersons{
-    var filteredDataTable: [ResultsStat]?
-    var requestData: [SearchJson]?
-}*/

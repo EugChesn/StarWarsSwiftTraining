@@ -8,9 +8,8 @@
 
 import UIKit
 
-class DetailsController : UIViewController{
+class DetailsController: UIViewController {
     var statPerson: ResultsStat?
-    
     @IBOutlet weak var namePerson: DataView!
     @IBOutlet weak var heightPerson: DataView!
     @IBOutlet weak var massPerson: DataView!
@@ -19,14 +18,12 @@ class DetailsController : UIViewController{
     @IBOutlet weak var eyeColorPerson: DataView!
     @IBOutlet weak var birthYearPerson: DataView!
     @IBOutlet weak var genderPerson: DataView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setNameLabeLoad()
         setDataTextLabelLoad()
     }
-    
-    private func setNameLabeLoad(){
+    private func setNameLabeLoad() {
         namePerson.labelContent.text = "Name"
         heightPerson.labelContent.text = "Height"
         massPerson.labelContent.text = "Mass"
@@ -36,9 +33,8 @@ class DetailsController : UIViewController{
         birthYearPerson.labelContent.text = "Year birth"
         genderPerson.labelContent.text = "Gender"
     }
-    
-    private func setDataTextLabelLoad(){
-        if let stat = statPerson{
+    private func setDataTextLabelLoad() {
+        if let stat = statPerson {
             namePerson.textFieldVar.text = stat.name
             heightPerson.textFieldVar.text = stat.height
             massPerson.textFieldVar.text = stat.mass
@@ -49,12 +45,9 @@ class DetailsController : UIViewController{
             genderPerson.textFieldVar.text = stat.gender
         }
     }
-    
     func sendData(_ anyData: Any?) {
         if let detailStruct = anyData as? ResultsStat {
             statPerson = detailStruct
         }
     }
-    
 }
-
