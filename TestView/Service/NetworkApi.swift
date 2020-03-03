@@ -6,7 +6,7 @@
 //  Copyright © 2020 Евгений. All rights reserved.
 //
 
-import CoreData
+//import Alamofire
 import UIKit
 
 class NetworkApi {
@@ -15,43 +15,15 @@ class NetworkApi {
         case error(String)
     }
     final let searchNameApi = "https://swapi.co/api/people/?search="
-    // Общее хранилище(ключ имя персонажа);
-    // Сюда сгружаются данные из БД и кешируется сетевые запросы
-    private var dataRequest: [String: ResultsStat] = [:]
+    private var modelRequest = ModelDataPerson.shared
     // данные за одну сессию(в случае с множеством запросов к api с переходом по next)
     private var sessionData: [SearchJson] = []
     var delegateSendData: DataRequestDelegate?
 
     static let instance: NetworkApi = NetworkApi()
+    private init() {}
     private var checkConnection: Bool = true
-    private func addRequestIntoDictionary(request: SearchJson) {
-        if let result = request.results {
-            for person in result {
-                dataRequest.updateValue(person, forKey: person.name)
-            }
-        }
-    }
 
-    private func getDictionaryForView(dataRequest: [SearchJson]) -> [String: ResultsStat]? {
-        var resDict: [String: ResultsStat] = [:]
-        for request in dataRequest {
-            if let result = request.results {
-                for person in result {
-                    resDict.updateValue(person, forKey: person.name)
-                }
-            }
-        }
-        return resDict
-    }
-    private func checkCashe(searchText: String) -> [String: ResultsStat] {
-        var resultPersons: [String: ResultsStat] = [:]
-        for key in dataRequest.keys {
-            if key.contains(searchText) {
-                resultPersons[key] = dataRequest[key]
-            }
-        }
-        return resultPersons
-    }
     private func createUrlSearch(namePeople: String) -> URL? {
         let searchUrlStr = searchNameApi + namePeople
         if let url = URL(string: searchUrlStr) {
@@ -83,7 +55,7 @@ class NetworkApi {
                     let jsonTest = try JSONDecoder().decode(SearchJson.self, from: data)
                     self.sessionData.append(jsonTest)
                     completion(jsonTest)
-                    self.addRequestIntoDictionary(request: jsonTest) // to cash
+                    self.modelRequest.addRequestIntoDictionary(request: jsonTest)
                 } catch let err {
                     handlerError(.error(err.localizedDescription))
                 }
@@ -106,7 +78,7 @@ class NetworkApi {
             self.checkConnection = true
             guard let json = jsonInput as? SearchJson else { return }
             guard let urlStr = json.next else {
-                self.delegateSendData?.sendDataRequest(data: getDictionaryForView(dataRequest: sessionData))
+                self.delegateSendData?.sendDataRequest(data: modelRequest.getDictionaryForView(dataRequest: sessionData))
                 self.sessionData = []
                 return
             }
@@ -119,41 +91,8 @@ class NetworkApi {
         if checkConnection {
             createSession(namePeople: namePeople)
         } else {
-            let cashePerson = checkCashe(searchText: namePeople)
+            let cashePerson = modelRequest.checkCashe(searchText: namePeople)
             self.delegateSendData?.sendDataRequest(data: cashePerson)
-        }
-    }
-    private func saveCoreData(recent: String) {
-        func statToPerson(stat: ResultsStat) -> Person {
-            let person = Person()
-            person.name = stat.name
-            person.height = Int32(stat.height) ?? 0
-            person.mass = Int32(stat.mass) ?? 0
-            person.gender = stat.gender
-            person.color_eyes = stat.eyeColor
-            person.color_hair = stat.hairColor
-            person.color_skin = stat.skinColor
-            person.year_birth = stat.birthYear
-            return person
-        }
-        let countRecent = CoreDataManager.shared.countObjectRequest(entityName: "Person", filterKey: recent)
-        if let count = countRecent {
-            if count < 1 {
-                if let dataReq = dataRequest[recent] {
-                    var person = statToPerson(stat: dataReq)
-                    CoreDataManager.shared.saveContext()
-                }
-            }
-        }
-    }
-    private func loadCoreData() {
-        let obj = CoreDataManager.shared.getFetchAllPerson(entityName: String(describing: Person.self)) as? [Person]
-        if let persons = obj {
-            for item in persons {
-                let stat = ResultsStat(person: item)
-                dataRequest.updateValue(stat, forKey: stat.name)
-            }
-            delegateSendData?.sendDataBase(data: dataRequest)
         }
     }
 }
@@ -163,19 +102,7 @@ extension NetworkApi: NetworkDelegate {
         getApi(namePeople: name)
     }
     func getRecentPerson(recent: Set<String>) {
-        let keys = dataRequest.keys
-        var result: [String: ResultsStat] = [:]
-        for item in recent {
-            if keys.contains(item) {
-                result[item] = dataRequest[item]
-            }
-        }
+        let result = modelRequest.getPerson(recent: recent)
         delegateSendData?.sendDataRequest(data: result)
-    }
-    func getRecentPersonDataBase() {
-        loadCoreData()
-    }
-    func setRecentPersonDataBase(recent: String) {
-        saveCoreData(recent: recent)
     }
 }

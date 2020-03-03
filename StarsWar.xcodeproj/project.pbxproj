@@ -26,6 +26,8 @@
 		3E6BA6AE23F2BAF20012E93B /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6BA6AD23F2BAF20012E93B /* DataView.swift */; };
 		3E983F8223F2EEF30077E162 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8123F2EEF30077E162 /* TableViewController.swift */; };
 		3E983F8523F305780077E162 /* DetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8423F305780077E162 /* DetailsController.swift */; };
+		3EA43DB6240E849F001B3DAF /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43DB5240E849F001B3DAF /* DataBase.swift */; };
+		3EA43DB8240E8852001B3DAF /* ModelDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43DB7240E8852001B3DAF /* ModelDataPerson.swift */; };
 		3EE8A525240BEA5800F12DA8 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EE8A524240BEA5800F12DA8 /* arrow.png */; };
 		42BC7BD59E31A6A2C9265101 /* Pods_StarsWar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */; };
 /* End PBXBuildFile section */
@@ -53,6 +55,9 @@
 		3E6BA6AD23F2BAF20012E93B /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		3E983F8123F2EEF30077E162 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		3E983F8423F305780077E162 /* DetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsController.swift; sourceTree = "<group>"; };
+		3EA43DB5240E849F001B3DAF /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
+		3EA43DB7240E8852001B3DAF /* ModelDataPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDataPerson.swift; sourceTree = "<group>"; };
+		3EA43DBB240EAE83001B3DAF /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EE8A524240BEA5800F12DA8 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StarsWar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC690AA434C02FF8B91A258 /* Pods-StarsWar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarsWar.debug.xcconfig"; path = "Target Support Files/Pods-StarsWar/Pods-StarsWar.debug.xcconfig"; sourceTree = "<group>"; };
@@ -94,16 +99,18 @@
 			isa = PBXGroup;
 			children = (
 				3E5A83B023F6CD5D00B8044E /* ModelJson.swift */,
+				3EA43DB7240E8852001B3DAF /* ModelDataPerson.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		3E244B1223F6FF0E0059F72D /* Network */ = {
+		3E244B1223F6FF0E0059F72D /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				3E244B0F23F6FEF40059F72D /* NetworkApi.swift */,
+				3EA43DB5240E849F001B3DAF /* DataBase.swift */,
 			);
-			path = Network;
+			path = Service;
 			sourceTree = "<group>";
 		};
 		3E244B1323F71F6A0059F72D /* Protocols */ = {
@@ -169,7 +176,7 @@
 				3E12210223F81674006CCB53 /* Controllers */,
 				3E12210123F8162F006CCB53 /* UI */,
 				3E244B1323F71F6A0059F72D /* Protocols */,
-				3E244B1223F6FF0E0059F72D /* Network */,
+				3E244B1223F6FF0E0059F72D /* Service */,
 				3E3FDD3D2409555F00FB3B6B /* DataCore */,
 				3E6BA6A023F2B95B0012E93B /* Assets.xcassets */,
 				3EE8A524240BEA5800F12DA8 /* arrow.png */,
@@ -191,6 +198,7 @@
 		5AE9770A59B5BB69C1B43CB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3EA43DBB240EAE83001B3DAF /* Alamofire.framework */,
 				C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */,
 			);
 			name = Frameworks;
@@ -325,6 +333,7 @@
 			files = (
 				3E3FDD412409586700FB3B6B /* Person+CoreDataProperties.swift in Sources */,
 				3E6BA6AE23F2BAF20012E93B /* DataView.swift in Sources */,
+				3EA43DB8240E8852001B3DAF /* ModelDataPerson.swift in Sources */,
 				3E6BA69823F2B95A0012E93B /* AppDelegate.swift in Sources */,
 				3E5DC80623F4883500F7214E /* CustomTableViewCell.swift in Sources */,
 				3E244B1523F71F830059F72D /* ProtocolsMain.swift in Sources */,
@@ -333,6 +342,7 @@
 				3E3FDD3C2409555300FB3B6B /* CoreDataManager.swift in Sources */,
 				3E12210423F8192F006CCB53 /* ExtensionsTable.swift in Sources */,
 				3E5A83B123F6CD5D00B8044E /* ModelJson.swift in Sources */,
+				3EA43DB6240E849F001B3DAF /* DataBase.swift in Sources */,
 				3E983F8223F2EEF30077E162 /* TableViewController.swift in Sources */,
 				3E3FDD402409586700FB3B6B /* Person+CoreDataClass.swift in Sources */,
 				3E6BA69A23F2B95A0012E93B /* SceneDelegate.swift in Sources */,

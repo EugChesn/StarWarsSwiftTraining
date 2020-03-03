@@ -11,6 +11,9 @@ protocol NetworkDelegate: class {
     func makeRequest(name: String)
     // запрос на получение данных недавно просмотренных персонажей
     func getRecentPerson(recent: Set<String>)
+}
+
+protocol DataBaseDelegate: class {
     // запрос на получении данных недавно просмотренных персонажей из базы
     func getRecentPersonDataBase()
     // сигнал добавить персонажа в базу

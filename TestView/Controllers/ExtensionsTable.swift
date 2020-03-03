@@ -42,6 +42,11 @@ extension TableViewController: UITableViewDataSource, UITableViewDelegate {
 extension TableViewController: DataRequestDelegate {
     func sendDataRequest(data: [String: ResultsStat]?) {
         if let dataExitst = data {
+            if !dataExitst.isEmpty {
+                headerTable = StateView.search
+            } else {
+                headerTable = StateView.noSearchResults
+            }
             dataRequestPersons = dataExitst
         }
     }
@@ -67,9 +72,18 @@ extension TableViewController: DataRequestDelegate {
 }
 
 extension TableViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
     // This method updates filteredData based on the text in the Search Box
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredData = []
         timerSearchDelay?.invalidate()
         timerSearchDelay = nil
         timerSearchDelay = Timer.scheduledTimer(timeInterval: 0.5, target: self,
@@ -77,13 +91,13 @@ extension TableViewController: UISearchBarDelegate {
                                                 userInfo: searchText, repeats: false)
     }
     @objc func doDelayedSearch(_: Timer) {
+        startSpinner()
         guard let info = timerSearchDelay?.userInfo as? String else { return }
         if !info.isEmpty {
-            headerTable = "Star Wars"
             delegateNetwork?.makeRequest(name: info)
         } else {
             delegateNetwork?.getRecentPerson(recent: viewPersonsDataCore)
-            headerTable = "Recent persons"
+            headerTable = StateView.recent
             tableView.reloadData()
         }
         timerSearchDelay = nil

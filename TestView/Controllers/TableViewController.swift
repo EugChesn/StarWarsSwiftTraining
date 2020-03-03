@@ -11,13 +11,20 @@ import UIKit
 class TableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    enum StateView {
+        static let search = "Search results"
+        static let noSearchResults = "Not found"
+        static let recent = "Recent person"
+    }
     var headerTable = "Star Wars"
     let network = NetworkApi.instance
+    let dataBase = DataBase.instanse
     var delegateNetwork: NetworkDelegate?
+    var delegateDataBase: DataBaseDelegate?
     //данные пришедщие от апи по последнему запросу
     var dataRequestPersons: [String: ResultsStat]? {
         didSet {
-            print("dataRequest update")
             setFilteredData()
         }
     }
@@ -33,18 +40,16 @@ class TableViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-        delegateNetwork = network
-        network.delegateSendData = self
+        bindingService()
         // Загрузка данных из БД для первоначального отображения
-        delegateNetwork?.getRecentPersonDataBase()
+        delegateDataBase?.getRecentPersonDataBase()
         filteredData = [String](viewPersonsDataCore)
-        //Для выключения клавиатуры
-        let tapScreen = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapScreen.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapScreen)
     }
-    @objc func dismissKeyboard(sender: UITapGestureRecognizer) {
-        view.endEditing(true)
+    private func bindingService() {
+        delegateNetwork = network
+        delegateDataBase = dataBase
+        network.delegateSendData = self
+        dataBase.delegateSendData = self
     }
     private func registerTableViewCells() {
         let cell = UINib(nibName: "CustomTableViewCell", bundle: nil)
@@ -59,7 +64,7 @@ class TableViewController: UIViewController {
         }
         filteredData = tmpRes
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.stopSpinner()
         }
     }
     private func searchPerson(namePerson: String) -> ResultsStat? {
@@ -68,6 +73,17 @@ class TableViewController: UIViewController {
         } else {
             return nil
         }
+    }
+    func startSpinner() {
+        spinner.isHidden = false
+        spinner.startAnimating()
+        filteredData = []
+        tableView.reloadData()
+    }
+    func stopSpinner() {
+        spinner.isHidden = true
+        spinner.stopAnimating()
+        tableView.reloadData()
     }
 
     //Нажатие на ячейку таблицы переход к экрану детайльной информации
@@ -79,7 +95,7 @@ class TableViewController: UIViewController {
         if let cell = self.tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
             guard let textName = cell.textLabelPerson.text else { return }
             viewPersonsDataCore.insert(textName)
-            delegateNetwork?.setRecentPersonDataBase(recent: textName)
+            delegateDataBase?.setRecentPersonDataBase(recent: textName)
             statViewController.sendData(searchPerson(namePerson: textName))
         }
         navigationController?.pushViewController(statViewController, animated: true)
