@@ -74,6 +74,11 @@ class TableViewController: UIViewController {
             return nil
         }
     }
+    func setRecent() {
+        delegateNetwork?.getRecentPerson(recent: viewPersonsDataCore)
+        headerTable = StateView.recent
+        tableView.reloadData()
+    }
     func startSpinner() {
         spinner.isHidden = false
         spinner.startAnimating()
@@ -98,6 +103,7 @@ class TableViewController: UIViewController {
             delegateDataBase?.setRecentPersonDataBase(recent: textName)
             statViewController.sendData(searchPerson(namePerson: textName))
         }
+        searchBar.resignFirstResponder()
         navigationController?.pushViewController(statViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,

@@ -13,7 +13,7 @@ extension TableViewController: UITableViewDataSource, UITableViewDelegate {
         return filteredData.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 47
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
@@ -79,7 +79,6 @@ extension TableViewController: UISearchBarDelegate {
         searchBar.showsCancelButton = false
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
         searchBar.resignFirstResponder()
     }
     // This method updates filteredData based on the text in the Search Box
@@ -96,9 +95,7 @@ extension TableViewController: UISearchBarDelegate {
         if !info.isEmpty {
             delegateNetwork?.makeRequest(name: info)
         } else {
-            delegateNetwork?.getRecentPerson(recent: viewPersonsDataCore)
-            headerTable = StateView.recent
-            tableView.reloadData()
+            setRecent()
         }
         timerSearchDelay = nil
     }

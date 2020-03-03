@@ -68,14 +68,12 @@ class NetworkApi {
         func handlerError(state: StateRequest) {
             switch state {
             case .error(let msg):
-                self.checkConnection = false
                 delegateSendData?.sendErrorRequest(error: msg)
             case .success:
                 break
             }
         }
         func handler(jsonInput: Any) {
-            self.checkConnection = true
             guard let json = jsonInput as? SearchJson else { return }
             guard let urlStr = json.next else {
                 self.delegateSendData?.sendDataRequest(data: modelRequest.getDictionaryForView(dataRequest: sessionData))
