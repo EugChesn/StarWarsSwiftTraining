@@ -34,6 +34,7 @@ class TableViewController: UIViewController {
     var filteredData: [String] = []
     //таймер задержки определяющий окончания ввода пользователя
     var timerSearchDelay: Timer?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableViewCells()
@@ -67,6 +68,11 @@ class TableViewController: UIViewController {
             self.stopSpinner()
         }
     }
+    private func reloadData() {
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        tableView.endUpdates()
+    }
     private func searchPerson(namePerson: String) -> ResultsStat? {
         if let person = dataRequestPersons {
             return person[namePerson]
@@ -88,7 +94,7 @@ class TableViewController: UIViewController {
     func stopSpinner() {
         spinner.isHidden = true
         spinner.stopAnimating()
-        tableView.reloadData()
+        reloadData()
     }
 
     //Нажатие на ячейку таблицы переход к экрану детайльной информации

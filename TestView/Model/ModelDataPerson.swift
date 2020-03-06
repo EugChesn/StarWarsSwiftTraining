@@ -9,6 +9,7 @@
 import Foundation
 
 class ModelDataPerson {
+    // кэш загруженных персонажей с апи и с бд (используем когда нет сети)
     private var dataRequest: [String: ResultsStat] = [:]
     static let shared: ModelDataPerson = ModelDataPerson()
     private init() { }

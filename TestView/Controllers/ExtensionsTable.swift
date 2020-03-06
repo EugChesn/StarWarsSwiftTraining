@@ -12,21 +12,24 @@ extension TableViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredData.count
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 47
-    }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return 50
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return headerTable
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
     }
-    //Выставление настроек отображения заголовка таблицы
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header: UITableViewHeaderFooterView = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textAlignment = NSTextAlignment.center
-        header.textLabel?.font = UIFont(name: "", size: 20)
-        header.textLabel?.textColor = UIColor.systemBlue
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
+
+        let label = UILabel()
+        label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
+        label.text = self.headerTable
+        label.font = UIFont(name: "", size: 6) // my custom font
+        label.textColor = UIColor .systemBlue // my custom colour
+
+        headerView.addSubview(label)
+
+        return headerView
     }
     //Создание кастомной ячейки таблицы
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -85,7 +88,7 @@ extension TableViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timerSearchDelay?.invalidate()
         timerSearchDelay = nil
-        timerSearchDelay = Timer.scheduledTimer(timeInterval: 0.5, target: self,
+        timerSearchDelay = Timer.scheduledTimer(timeInterval: 0.7, target: self,
                                                 selector: #selector(self.doDelayedSearch),
                                                 userInfo: searchText, repeats: false)
     }

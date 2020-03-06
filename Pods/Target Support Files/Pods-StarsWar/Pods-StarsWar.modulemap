@@ -1,4 +1,4 @@
-framework module Pods_StarsWar {
+module Pods_StarsWar {
   umbrella header "Pods-StarsWar-umbrella.h"
 
   export *

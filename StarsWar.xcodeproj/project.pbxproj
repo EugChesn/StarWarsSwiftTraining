@@ -28,12 +28,14 @@
 		3E983F8523F305780077E162 /* DetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E983F8423F305780077E162 /* DetailsController.swift */; };
 		3EA43DB6240E849F001B3DAF /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43DB5240E849F001B3DAF /* DataBase.swift */; };
 		3EA43DB8240E8852001B3DAF /* ModelDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43DB7240E8852001B3DAF /* ModelDataPerson.swift */; };
-		3EE8A525240BEA5800F12DA8 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EE8A524240BEA5800F12DA8 /* arrow.png */; };
-		42BC7BD59E31A6A2C9265101 /* Pods_StarsWar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */; };
+		3EF50D312411122A00D9C756 /* CustomDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF50D2F2411122A00D9C756 /* CustomDetailTableViewCell.swift */; };
+		3EF50D322411122A00D9C756 /* CustomDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EF50D302411122A00D9C756 /* CustomDetailTableViewCell.xib */; };
+		B38AE585E18FCCA1B267F486 /* libPods-StarsWar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B5ABA028416A0DA017B8FF /* libPods-StarsWar.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0E463F8D10CC264619602DC2 /* Pods-StarsWar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarsWar.release.xcconfig"; path = "Target Support Files/Pods-StarsWar/Pods-StarsWar.release.xcconfig"; sourceTree = "<group>"; };
+		25B5ABA028416A0DA017B8FF /* libPods-StarsWar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StarsWar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E12210323F8192F006CCB53 /* ExtensionsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsTable.swift; sourceTree = "<group>"; };
 		3E244B0F23F6FEF40059F72D /* NetworkApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkApi.swift; sourceTree = "<group>"; };
 		3E244B1423F71F830059F72D /* ProtocolsMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolsMain.swift; sourceTree = "<group>"; };
@@ -41,6 +43,7 @@
 		3E3FDD3B2409555300FB3B6B /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		3E3FDD3E2409586700FB3B6B /* Person+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3E3FDD3F2409586700FB3B6B /* Person+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3E5A590424125D9800C37C11 /* Reachability.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Reachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E5A83B023F6CD5D00B8044E /* ModelJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelJson.swift; sourceTree = "<group>"; };
 		3E5DC80423F4883500F7214E /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		3E5DC80523F4883500F7214E /* CustomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
@@ -58,8 +61,8 @@
 		3EA43DB5240E849F001B3DAF /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
 		3EA43DB7240E8852001B3DAF /* ModelDataPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDataPerson.swift; sourceTree = "<group>"; };
 		3EA43DBB240EAE83001B3DAF /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3EE8A524240BEA5800F12DA8 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
-		C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StarsWar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EF50D2F2411122A00D9C756 /* CustomDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDetailTableViewCell.swift; sourceTree = "<group>"; };
+		3EF50D302411122A00D9C756 /* CustomDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomDetailTableViewCell.xib; sourceTree = "<group>"; };
 		EBC690AA434C02FF8B91A258 /* Pods-StarsWar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarsWar.debug.xcconfig"; path = "Target Support Files/Pods-StarsWar/Pods-StarsWar.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42BC7BD59E31A6A2C9265101 /* Pods_StarsWar.framework in Frameworks */,
+				B38AE585E18FCCA1B267F486 /* libPods-StarsWar.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +148,8 @@
 			children = (
 				3E5DC80423F4883500F7214E /* CustomTableViewCell.swift */,
 				3E5DC80523F4883500F7214E /* CustomTableViewCell.xib */,
+				3EF50D2F2411122A00D9C756 /* CustomDetailTableViewCell.swift */,
+				3EF50D302411122A00D9C756 /* CustomDetailTableViewCell.xib */,
 			);
 			path = CustomCell;
 			sourceTree = "<group>";
@@ -179,7 +184,6 @@
 				3E244B1223F6FF0E0059F72D /* Service */,
 				3E3FDD3D2409555F00FB3B6B /* DataCore */,
 				3E6BA6A023F2B95B0012E93B /* Assets.xcassets */,
-				3EE8A524240BEA5800F12DA8 /* arrow.png */,
 				3E6BA6A223F2B95B0012E93B /* LaunchScreen.storyboard */,
 				3E6BA6A523F2B95B0012E93B /* Info.plist */,
 			);
@@ -198,8 +202,9 @@
 		5AE9770A59B5BB69C1B43CB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3E5A590424125D9800C37C11 /* Reachability.framework */,
 				3EA43DBB240EAE83001B3DAF /* Alamofire.framework */,
-				C50F26A1766C321705DFCC3C /* Pods_StarsWar.framework */,
+				25B5ABA028416A0DA017B8FF /* libPods-StarsWar.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -274,10 +279,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E6BA6AC23F2B9F40012E93B /* DataView.xib in Resources */,
-				3EE8A525240BEA5800F12DA8 /* arrow.png in Resources */,
 				3E6BA6A423F2B95B0012E93B /* LaunchScreen.storyboard in Resources */,
 				3E6BA6A123F2B95B0012E93B /* Assets.xcassets in Resources */,
 				3E5DC80723F4883500F7214E /* CustomTableViewCell.xib in Resources */,
+				3EF50D322411122A00D9C756 /* CustomDetailTableViewCell.xib in Resources */,
 				3E6BA69F23F2B95A0012E93B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,6 +346,7 @@
 				3E3FDD3A2409537300FB3B6B /* ModelPerson.xcdatamodeld in Sources */,
 				3E3FDD3C2409555300FB3B6B /* CoreDataManager.swift in Sources */,
 				3E12210423F8192F006CCB53 /* ExtensionsTable.swift in Sources */,
+				3EF50D312411122A00D9C756 /* CustomDetailTableViewCell.swift in Sources */,
 				3E5A83B123F6CD5D00B8044E /* ModelJson.swift in Sources */,
 				3EA43DB6240E849F001B3DAF /* DataBase.swift in Sources */,
 				3E983F8223F2EEF30077E162 /* TableViewController.swift in Sources */,

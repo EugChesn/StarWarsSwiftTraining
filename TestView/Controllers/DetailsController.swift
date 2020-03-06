@@ -9,45 +9,53 @@
 import UIKit
 
 class DetailsController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
     var statPerson: ResultsStat?
-    @IBOutlet weak var namePerson: DataView!
-    @IBOutlet weak var heightPerson: DataView!
-    @IBOutlet weak var massPerson: DataView!
-    @IBOutlet weak var hairColorPerson: DataView!
-    @IBOutlet weak var skinColorPerson: DataView!
-    @IBOutlet weak var eyeColorPerson: DataView!
-    @IBOutlet weak var birthYearPerson: DataView!
-    @IBOutlet weak var genderPerson: DataView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        setNameLabeLoad()
-        setDataTextLabelLoad()
+        registerTableViewCells()
+        tableView.delegate = self
+        tableView.dataSource = self
     }
-    private func setNameLabeLoad() {
-        namePerson.labelContent.text = "Name"
-        heightPerson.labelContent.text = "Height"
-        massPerson.labelContent.text = "Mass"
-        hairColorPerson.labelContent.text = "Color hair"
-        skinColorPerson.labelContent.text = "Color skin"
-        eyeColorPerson.labelContent.text = "Color eyes"
-        birthYearPerson.labelContent.text = "Year birth"
-        genderPerson.labelContent.text = "Gender"
-    }
-    private func setDataTextLabelLoad() {
-        if let stat = statPerson {
-            namePerson.textFieldVar.text = stat.name
-            heightPerson.textFieldVar.text = stat.height
-            massPerson.textFieldVar.text = stat.mass
-            hairColorPerson.textFieldVar.text = stat.hairColor
-            skinColorPerson.textFieldVar.text = stat.skinColor
-            eyeColorPerson.textFieldVar.text = stat.eyeColor
-            birthYearPerson.textFieldVar.text = stat.birthYear
-            genderPerson.textFieldVar.text = stat.gender
-        }
+    private func registerTableViewCells() {
+        let cell = UINib(nibName: "CustomDetailTableViewCell", bundle: nil)
+        tableView.register(cell, forCellReuseIdentifier: "DetailCell")
     }
     func sendData(_ anyData: Any?) {
         if let detailStruct = anyData as? ResultsStat {
             statPerson = detailStruct
         }
+    }
+}
+
+extension DetailsController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
+
+        let label = UILabel()
+        label.frame = CGRect.init(x: 15, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
+        label.text = "Info"
+        label.font = UIFont(name: "", size: 6) // my custom font
+        label.textColor = UIColor .systemBlue // my custom colour
+
+        headerView.addSubview(label)
+
+        return headerView
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return statPerson?.details.count ?? 0
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell",
+                                                    for: indexPath) as? CustomDetailTableViewCell {
+            let details = statPerson?.details[indexPath.row]
+            cell.titleLabel?.text = details?.0
+            cell.typeLabel?.text = details?.1
+            return cell
+        }
+        return UITableViewCell()
     }
 }

@@ -42,6 +42,15 @@ struct ResultsStat: Codable, Equatable {
         case birthYear = "birth_year"
         case gender = "gender"
     }
+    var details: [(String, String)] {
+        return [("Name", name),
+        ("Height", height),
+        ("Mass", mass),
+        ("Hair color", hairColor),
+        ("Skin color", skinColor),
+        ("Birth year", birthYear),
+        ("Gender", gender)]
+    }
     static func == (left: ResultsStat, right: ResultsStat) -> Bool {
         return left.name == right.name
     }
