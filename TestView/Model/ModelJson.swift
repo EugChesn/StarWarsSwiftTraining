@@ -55,3 +55,11 @@ struct ResultsStat: Codable, Equatable {
         return left.name == right.name
     }
 }
+
+enum StateView {
+    static let launch = "Star Wars"
+    static let search = "Search results"
+    static let noSearchResults = "Not found"
+    static let recent = "Recent person"
+    static let noConection = "No Conection"
+}

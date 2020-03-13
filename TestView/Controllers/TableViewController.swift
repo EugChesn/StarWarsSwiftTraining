@@ -12,92 +12,89 @@ class TableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
-    enum StateView {
-        static let search = "Search results"
-        static let noSearchResults = "Not found"
-        static let recent = "Recent person"
-    }
-    var headerTable = "Star Wars"
-    let network = NetworkApi.instance
-    let dataBase = DataBase.instanse
-    var delegateNetwork: NetworkDelegate?
-    var delegateDataBase: DataBaseDelegate?
-    //данные пришедщие от апи по последнему запросу
-    var dataRequestPersons: [String: ResultsStat]? {
-        didSet {
-            setFilteredData()
-        }
-    }
-    // недавно просмотренные персонажи на экране детальной информации
-    var viewPersonsDataCore: Set<String> = []
-    // данные по которым выполняется отображение поиска
-    var filteredData: [String] = []
-    //таймер задержки определяющий окончания ввода пользователя
+    var model = ModelDataPerson.shared
+    var headerTable = StateView.launch
     var timerSearchDelay: Timer?
 
+    // данные по которым выполняется отображение поиска
+    var filteredData: [String] = [] {
+        willSet(newValue) {
+            if !newValue.isEmpty {
+                setFilteredData()
+            } 
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableViewCells()
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-        bindingService()
         // Загрузка данных из БД для первоначального отображения
-        delegateDataBase?.getRecentPersonDataBase()
-        filteredData = [String](viewPersonsDataCore)
+        model.loadPersonFromDataBase(completion: {[weak self] (data) in
+            guard let strongSelf = self else { return }
+            strongSelf.filteredData = data
+        })
     }
-    private func bindingService() {
-        delegateNetwork = network
-        delegateDataBase = dataBase
-        network.delegateSendData = self
-        dataBase.delegateSendData = self
-    }
+
     private func registerTableViewCells() {
         let cell = UINib(nibName: "CustomTableViewCell", bundle: nil)
         tableView.register(cell, forCellReuseIdentifier: "CustomTableViewCell")
     }
     private func setFilteredData() {
-        var tmpRes: [String] = []
-        if let results = dataRequestPersons {
-            for name in results.keys {
-                tmpRes.append(name)
-            }
-        }
-        filteredData = tmpRes
         DispatchQueue.main.async {
             self.stopSpinner()
         }
     }
-    private func reloadData() {
-        tableView.beginUpdates()
-        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-        tableView.endUpdates()
-    }
-    private func searchPerson(namePerson: String) -> ResultsStat? {
-        if let person = dataRequestPersons {
-            return person[namePerson]
-        } else {
-            return nil
-        }
-    }
-    func setRecent() {
-        delegateNetwork?.getRecentPerson(recent: viewPersonsDataCore)
-        headerTable = StateView.recent
-        tableView.reloadData()
-    }
     func startSpinner() {
+        setHeaderTable(state: StateView.search)
         spinner.isHidden = false
         spinner.startAnimating()
         filteredData = []
-        tableView.reloadData()
+        reloadData()
     }
     func stopSpinner() {
         spinner.isHidden = true
         spinner.stopAnimating()
         reloadData()
     }
+    private func reloadData() {
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        tableView.endUpdates()
+    }
+    func setRecent() {
+        headerTable = StateView.recent
+        filteredData = model.getRecentPerson()
+        if filteredData.isEmpty {
+            stopSpinner()
+        } else {
+            reloadData()
+        }
+    }
+    func alertErrorNetwork(error: String) {
+        DispatchQueue.main.async {
+            switch error {
+            case StateView.noSearchResults:
+                self.setHeaderTable(state: error)
+                self.stopSpinner()
+            default:
+                self.stopSpinner()
+                let alert = UIAlertController(title: nil, message: error, preferredStyle: .actionSheet)
+                alert.view.alpha = 6
+                alert.view.layer.cornerRadius = 15
+                self.present(alert, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                    alert.dismiss(animated: true)
+                }
+            }
+        }
+    }
+    private func setHeaderTable(state: String) {
+        headerTable = state
+    }
 
-    //Нажатие на ячейку таблицы переход к экрану детайльной информации
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let statViewController = storyboard.instantiateViewController(withIdentifier: "Stat")
@@ -105,9 +102,9 @@ class TableViewController: UIViewController {
         tableView.deselectRow(at: indexPath, animated: false)
         if let cell = self.tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
             guard let textName = cell.textLabelPerson.text else { return }
-            viewPersonsDataCore.insert(textName)
-            delegateDataBase?.setRecentPersonDataBase(recent: textName)
-            statViewController.sendData(searchPerson(namePerson: textName))
+            model.setRecentViewPerson(name: textName)
+            model.setPersonsToDataBase(name: textName)
+            statViewController.sendData(model.getInfoAboutPerson(name: textName))
         }
         searchBar.resignFirstResponder()
         navigationController?.pushViewController(statViewController, animated: true)
@@ -115,15 +112,8 @@ class TableViewController: UIViewController {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if let cell = self.tableView.cellForRow(at: indexPath) as? CustomTableViewCell {
-                guard let textName = cell.textLabelPerson.text else { return }
-                CoreDataManager.shared.deleteObject(entityName: "Person", filterKey: textName)
-            }
-            // remove the item from the data model
-            viewPersonsDataCore.remove(filteredData[indexPath.row])
-            CoreDataManager.shared.deleteObject(entityName: "Person", filterKey: filteredData[indexPath.row])
+            model.removeRecentPerson(name: filteredData[indexPath.row])
             filteredData.remove(at: indexPath.row)
-            // delete the table view row
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }

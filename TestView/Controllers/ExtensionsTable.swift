@@ -42,38 +42,6 @@ extension TableViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension TableViewController: DataRequestDelegate {
-    func sendDataRequest(data: [String: ResultsStat]?) {
-        if let dataExitst = data {
-            if !dataExitst.isEmpty {
-                headerTable = StateView.search
-            } else {
-                headerTable = StateView.noSearchResults
-            }
-            dataRequestPersons = dataExitst
-        }
-    }
-    func sendErrorRequest(error: String) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: nil, message: error, preferredStyle: .alert)
-            alert.view.alpha = 6
-            alert.view.layer.cornerRadius = 15
-            self.present(alert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-                alert.dismiss(animated: true)
-            }
-        }
-    }
-    func sendDataBase(data: [String: ResultsStat]?) {
-        if let dataExitst = data {
-            dataRequestPersons = data
-            for item in dataExitst {
-                viewPersonsDataCore.insert(item.key)
-            }
-        }
-    }
-}
-
 extension TableViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
@@ -96,7 +64,14 @@ extension TableViewController: UISearchBarDelegate {
         startSpinner()
         guard let info = timerSearchDelay?.userInfo as? String else { return }
         if !info.isEmpty {
-            delegateNetwork?.makeRequest(name: info)
+            startSpinner()
+            model.searchPerson(search: info, completion: { [weak self] (data) in
+                guard let strongSelf = self else { return }
+                strongSelf.filteredData = data
+                }, failure: { [weak self] (error) in
+                    guard let strongSelf = self else { return }
+                    strongSelf.alertErrorNetwork(error: error)
+            })
         } else {
             setRecent()
         }

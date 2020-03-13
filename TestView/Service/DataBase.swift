@@ -8,12 +8,16 @@
 
 import Foundation
 
-class DataBase {
-    private var modelRequest = ModelDataPerson.shared
+protocol actionDatabase: class {
+    func saveCoreData(recent: ResultsStat)
+    func loadCoreData(completion: @escaping ([Person]) -> Void)
+    func deleteCoreData(name: String)
+}
+
+class DataBase: actionDatabase {
     static let instanse: DataBase = DataBase()
     private init() {}
-    var delegateSendData: DataRequestDelegate?
-    private func saveCoreData(recent: String) {
+    func saveCoreData(recent: ResultsStat) {
         func statToPerson(stat: ResultsStat) -> Person {
             let person = Person()
             person.name = stat.name
@@ -26,28 +30,21 @@ class DataBase {
             person.year_birth = stat.birthYear
             return person
         }
-        let countRecent = CoreDataManager.shared.countObjectRequest(entityName: "Person", filterKey: recent)
+        let countRecent = CoreDataManager.shared.countObjectRequest(entityName: "Person", filterKey: recent.name)
         if let count = countRecent {
             if count < 1 {
-                guard let dataReq = modelRequest.checkPerson(recent: recent) else { return }
-                var person = statToPerson(stat: dataReq)
+                var person = statToPerson(stat: recent)
                 CoreDataManager.shared.saveContext()
             }
         }
     }
-    private func loadCoreData() {
-        let obj = CoreDataManager.shared.getFetchAllPerson(entityName: String(describing: Person.self)) as? [Person]
-        if let persons = obj {
-            delegateSendData?.sendDataBase(data: modelRequest.loadPerson(persons: persons))
+    func loadCoreData(completion: @escaping ([Person]) -> Void) {
+        let objResult = CoreDataManager.shared.getFetchAllPerson(entityName: String(describing: Person.self)) as? [Person]
+        if let result = objResult {
+            completion(result)
         }
     }
-}
-
-extension DataBase: DataBaseDelegate {
-    func getRecentPersonDataBase() {
-        loadCoreData()
-    }
-    func setRecentPersonDataBase(recent: String) {
-        saveCoreData(recent: recent)
+    func deleteCoreData(name: String) {
+        CoreDataManager.shared.deleteObject(entityName: "Person", filterKey: name)
     }
 }
