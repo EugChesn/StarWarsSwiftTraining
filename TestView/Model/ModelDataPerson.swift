@@ -69,7 +69,7 @@ class ModelDataPerson {
     private func loadPerson(persons: [Person]) -> [String] {
         for item in persons {
             let stat = ResultsStat(person: item)
-            dataRequest.updateValue(stat, forKey: stat.name)
+            dataRequest.updateValue(stat, forKey: stat.name.lowercased())
         }
         viewPersonsDataCore = Array(dataRequest.keys)
         return viewPersonsDataCore
@@ -94,7 +94,7 @@ class ModelDataPerson {
     private func filteredDataRequest(request: SearchJson) -> [String] {
         var filtered = [String]()
         if let result = request.results {
-            result.forEach { filtered.append($0.name) }
+            result.forEach { filtered.append($0.name.lowercased()) }
         }
         return filtered
     }
@@ -134,7 +134,7 @@ extension ModelDataPerson: SearchPerson {
 
 extension ModelDataPerson: DatabaseRecentPerson {
     func setPersonsToDataBase(name: String) {
-        guard let person = dataRequest[name] else { return }
+        guard let person = dataRequest[name.lowercased()] else { return }
         database.saveCoreData(recent: person)
     }
     func loadPersonFromDataBase(completion: @escaping ([String]) -> Void) {

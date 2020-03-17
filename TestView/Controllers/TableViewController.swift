@@ -24,7 +24,6 @@ class TableViewController: UIViewController {
             } 
         }
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableViewCells()
@@ -107,7 +106,8 @@ class TableViewController: UIViewController {
             statViewController.sendData(model.getInfoAboutPerson(name: textName))
         }
         searchBar.resignFirstResponder()
-        navigationController?.pushViewController(statViewController, animated: true)
+        navigationController?.present(statViewController, animated: true, completion: nil)
+        //navigationController?.pushViewController(statViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {

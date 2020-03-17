@@ -20,7 +20,7 @@ class DataBase: actionDatabase {
     func saveCoreData(recent: ResultsStat) {
         func statToPerson(stat: ResultsStat) -> Person {
             let person = Person()
-            person.name = stat.name
+            person.name = stat.name.lowercased()
             person.height = Int32(stat.height) ?? 0
             person.mass = Int32(stat.mass) ?? 0
             person.gender = stat.gender
