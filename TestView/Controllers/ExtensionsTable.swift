@@ -8,22 +8,22 @@
 
 import UIKit
 
-extension TableViewController: UITableViewDataSource, UITableViewDelegate {
+extension TableViewController: UITableViewDataSource, UITableViewDelegate {    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredData.count
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
+        return heightRow
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return heightHeaderSection
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
 
         let label = UILabel()
         label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
-        label.text = self.headerTable
+        label.text = headerTable
         label.font = UIFont(name: "", size: 6) // my custom font
         label.textColor = UIColor .systemBlue // my custom colour
 
@@ -33,12 +33,9 @@ extension TableViewController: UITableViewDataSource, UITableViewDelegate {
     }
     //Создание кастомной ячейки таблицы
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell",
-                                                    for: indexPath) as? CustomTableViewCell {
-            cell.textLabelPerson.text = filteredData[indexPath.row]
-            return cell
-        }
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(with: CustomTableViewCell.self, for: indexPath)
+        cell.textLabelPerson.text = filteredData[indexPath.row]
+        return cell
     }
 }
 
@@ -61,16 +58,17 @@ extension TableViewController: UISearchBarDelegate {
                                                 userInfo: searchText, repeats: false)
     }
     @objc func doDelayedSearch(_: Timer) {
-        startSpinner()
         guard let info = timerSearchDelay?.userInfo as? String else { return }
         if !info.isEmpty {
             startSpinner()
-            model.searchPerson(search: info, completion: { [weak self] (data) in
+            model.searchPerson(search: info, completion: { [weak self] result in
                 guard let strongSelf = self else { return }
-                strongSelf.filteredData = data
-                }, failure: { [weak self] (error) in
-                    guard let strongSelf = self else { return }
-                    strongSelf.alertErrorNetwork(error: error)
+                switch result {
+                case .success(let data):
+                    strongSelf.filteredData = data
+                case .failure(let error):
+                    strongSelf.alertError(error: error)
+                }
             })
         } else {
             setRecent()

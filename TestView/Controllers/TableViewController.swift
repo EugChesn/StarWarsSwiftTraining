@@ -12,6 +12,9 @@ class TableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
+    let heightRow: CGFloat = 50
+    let heightHeaderSection: CGFloat = 50
     var model = ModelDataPerson.shared
     var headerTable = StateView.launch
     var timerSearchDelay: Timer?
@@ -26,21 +29,18 @@ class TableViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerTableViewCells()
+        tableView.register(cellType: CustomTableViewCell.self)
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
+        
         // Загрузка данных из БД для первоначального отображения
-        model.loadPersonFromDataBase(completion: {[weak self] (data) in
+        model.loadPersonFromDataBase(completion: {[weak self] data in
             guard let strongSelf = self else { return }
             strongSelf.filteredData = data
         })
     }
 
-    private func registerTableViewCells() {
-        let cell = UINib(nibName: "CustomTableViewCell", bundle: nil)
-        tableView.register(cell, forCellReuseIdentifier: "CustomTableViewCell")
-    }
     private func setFilteredData() {
         DispatchQueue.main.async {
             self.stopSpinner()
@@ -72,26 +72,32 @@ class TableViewController: UIViewController {
             reloadData()
         }
     }
-    func alertErrorNetwork(error: String) {
-        DispatchQueue.main.async {
-            switch error {
-            case StateView.noSearchResults:
-                self.setHeaderTable(state: error)
-                self.stopSpinner()
-            default:
-                self.stopSpinner()
-                let alert = UIAlertController(title: nil, message: error, preferredStyle: .actionSheet)
-                alert.view.alpha = 6
-                alert.view.layer.cornerRadius = 15
-                self.present(alert, animated: true)
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                    alert.dismiss(animated: true)
-                }
-            }
-        }
-    }
     private func setHeaderTable(state: String) {
         headerTable = state
+    }
+    private func createAlert(error: NetworkRequestError) {
+        let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .actionSheet)
+        alert.view.alpha = 6
+        alert.view.layer.cornerRadius = 15
+        self.present(alert, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            alert.dismiss(animated: true)
+        }
+    }
+    func alertError(error: NetworkRequestError) {
+        DispatchQueue.main.async {
+            self.stopSpinner()
+            switch error {
+            case .noConnection:
+                self.setHeaderTable(state: StateView.noConection)
+            case .noSearchResult:
+                self.setHeaderTable(state: StateView.noSearchResults)
+            case .errorRequest:
+                self.createAlert(error: .errorRequest)
+            case .jsonDecode:
+                self.createAlert(error: .errorRequest)
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -107,7 +113,6 @@ class TableViewController: UIViewController {
         }
         searchBar.resignFirstResponder()
         navigationController?.present(statViewController, animated: true, completion: nil)
-        //navigationController?.pushViewController(statViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {

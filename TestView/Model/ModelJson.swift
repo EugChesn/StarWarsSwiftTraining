@@ -63,3 +63,10 @@ enum StateView {
     static let recent = "Recent person"
     static let noConection = "No Conection"
 }
+
+enum NetworkRequestError: Error {
+    case noSearchResult
+    case noConnection
+    case errorRequest
+    case jsonDecode
+}

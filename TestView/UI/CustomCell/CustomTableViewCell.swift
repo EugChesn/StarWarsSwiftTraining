@@ -10,21 +10,14 @@ import UIKit
 
 class CustomTableViewCell: UITableViewCell {
     @IBOutlet weak var textLabelPerson: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if highlighted {
             contentView.backgroundColor = UIColor .systemGray
-            for item in self.subviews {
-                item.superview?.backgroundColor = UIColor .systemGray
-            }
+            subviews.forEach { $0.superview?.backgroundColor = UIColor .systemGray }
         } else {
-            for item in self.subviews {
-                item.superview?.backgroundColor = UIColor .systemBackground
-            }
-            self.contentView.backgroundColor = UIColor .systemBackground
+            contentView.backgroundColor = UIColor .systemBackground
+            subviews.forEach { $0.superview?.backgroundColor = UIColor .systemBackground }
         }
     }
     override func prepareForReuse() {
